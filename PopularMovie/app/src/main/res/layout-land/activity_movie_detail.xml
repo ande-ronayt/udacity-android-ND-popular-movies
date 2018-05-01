@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout  xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="com.andeudacity.popularmovie.MovieDetailActivity">
+
+    <data>
+        <variable
+            name="vm"
+            type="com.andeudacity.popularmovie.entities.Movie"/>
+    </data>
+
+    <android.support.constraint.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <ImageView
+            android:id="@+id/imageView"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            tools:layout_height="150dp"
+
+            app:layout_constraintWidth_percent="0.27"
+
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="24dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+
+            android:adjustViewBounds="true"
+            app:PicassoSrc="@{vm.posterImagePath}"
+
+            android:layout_marginLeft="16dp"
+
+            android:contentDescription="@string/description_movie_s_poster"
+            />
+
+        <TextView
+            android:id="@+id/txtTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            tools:text="Title"
+
+            android:text="@{vm.title}"
+
+            android:textColor="@android:color/black"
+            android:textSize="18sp"
+
+            app:layout_constraintStart_toEndOf="@+id/imageView"
+            app:layout_constraintTop_toTopOf="@+id/imageView"
+            android:layout_marginLeft="16dp" />
+
+        <RatingBar
+            android:id="@+id/ratingBar"
+            style="@style/Widget.AppCompat.RatingBar.Small"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:numStars="5"
+            android:rating="@{vm.userRating/2}"
+            app:layout_constraintStart_toStartOf="@+id/txtTitle"
+            app:layout_constraintTop_toBottomOf="@+id/txtTitle" />
+
+        <TextView
+            android:id="@+id/txtDate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            tools:text="2018 May 1"
+
+            android:text="@{vm.releaseDate}"
+
+            app:layout_constraintStart_toStartOf="@+id/ratingBar"
+            app:layout_constraintTop_toBottomOf="@+id/ratingBar" />
+
+        <TextView
+            android:id="@+id/txtOverview"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="16dp"
+            android:layout_marginTop="4dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.333"
+            app:layout_constraintStart_toStartOf="@+id/txtDate"
+            app:layout_constraintTop_toBottomOf="@+id/txtDate"
+            tools:text="Lorem ipsum dolor sit amet, no appetere petentium suscipiantur sit, at alia tation vim. At malis solet nonumy cum, vocibus constituto temporibus ex est. At pri reque quidam fabellas. Id option bonorum consetetur pro, ex solum erant mnesarchum nam. At eam mundi exerci recteque, soluta principes eam ut, nec id cibo tota veritus. Eius solum simul mel ei. At nec prima autem convenire, no tota indoctum sadipscing eum, ei erat iracundia hendrerit eos."
+
+            android:text="@{vm.plotSynopsis}"
+
+            android:layout_marginRight="16dp" />
+    </android.support.constraint.ConstraintLayout>
+</layout>
