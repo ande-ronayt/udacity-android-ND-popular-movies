@@ -139,6 +139,8 @@ public class MovieListViewModel extends AndroidViewModel {
         return new OnScrollListener();
     }
 
+    public int listPosition;
+
     public class OnScrollListener extends RecyclerView.OnScrollListener{
 
         @Override
@@ -180,5 +182,12 @@ public class MovieListViewModel extends AndroidViewModel {
 //
 //        }
 
+        //this one will try for saving list position:
+
+        @Override
+        public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+            RecyclerView.LayoutManager layoutManager = recyclerView.getLayoutManager();
+            listPosition = ((GridLayoutManager)layoutManager).findFirstVisibleItemPosition();
+        }
     }
 }

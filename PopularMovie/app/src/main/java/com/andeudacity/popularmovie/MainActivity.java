@@ -61,6 +61,7 @@ public class MainActivity extends AppCompatActivity implements MovieRecyclerView
         mBinding.list.setAdapter(new MovieRecyclerViewAdapter(this));
 
         mBinding.list.addOnScrollListener(mBinding.getVm().getScrollListener());
+        mBinding.list.scrollToPosition(mBinding.getVm().listPosition); //din't work.. items still null
     }
 
     private MovieListViewModel obtainViewModel() {

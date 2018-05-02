@@ -10,6 +10,9 @@
             type="com.andeudacity.popularmovie.entities.Movie"/>
     </data>
 
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
     <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
@@ -90,4 +93,5 @@
 
             android:layout_marginRight="16dp" />
     </android.support.constraint.ConstraintLayout>
+    </ScrollView>
 </layout>
