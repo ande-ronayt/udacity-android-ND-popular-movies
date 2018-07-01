@@ -1,6 +1,8 @@
 package com.andeudacity.popularmovie.services;
 
 import com.andeudacity.popularmovie.entities.Movie;
+import com.andeudacity.popularmovie.entities.Review;
+import com.andeudacity.popularmovie.entities.Video;
 
 import java.util.List;
 
@@ -12,4 +14,8 @@ public interface IMovieService {
     ServiceResult<List<Movie>> loadPopularMovie(int page);
 
     ServiceResult<List<Movie>> loadTopRateMovie(int page);
+
+    ServiceResult<List<Video>> loadVideo(long id);
+
+    ServiceResult<List<Review>> loadReview(long id);
 }

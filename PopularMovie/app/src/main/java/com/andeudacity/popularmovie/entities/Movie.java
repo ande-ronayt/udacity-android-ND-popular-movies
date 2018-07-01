@@ -1,17 +1,24 @@
 package com.andeudacity.popularmovie.entities;
 
+import android.arch.persistence.room.Entity;
+import android.arch.persistence.room.PrimaryKey;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.support.annotation.NonNull;
 
 import com.andeudacity.popularmovie.helpers.ImageHelper;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Created by andrii on 4/29/18.
  */
 
+@Entity
 public class Movie implements Parcelable { // I generated it by www.parcelabler.com
 
+    @PrimaryKey
     private long id;
 
     /**
@@ -29,15 +36,48 @@ public class Movie implements Parcelable { // I generated it by www.parcelabler.
      * A plot synopsis
      */
     private String overview;
+    // for some reason I need it for Room
+    public String getOverview() { return overview;}
 
     //release date
     private String release_date;
-
+    // for some reason I need it for Room
+    public String getRelease_date() { return release_date;}
 
     /**
      * user rating (called vote_average in the api)
      */
     private String vote_average;
+    // for some reason I need it for Room
+    public String getVote_average() { return vote_average;}
+
+    /**
+     * All trailors for movie
+     */
+    private List<Video> videos;
+
+    /**
+     * All reviews for movie
+     */
+    private List<Review> reviews;
+
+    private boolean favourite = false;
+
+    public Movie(long id, String title, String poster_path,
+                 String overview, String release_date,
+                 String vote_average, boolean favourite,
+                 List<Video> videos, List<Review> reviews){
+        this.id = id;
+        this.title = title;
+        this.poster_path = poster_path;
+        this.overview = overview;
+        this.release_date = release_date;
+        this.vote_average = vote_average;
+        this.videos = videos;
+        this.reviews = reviews;
+        this.favourite = favourite;
+    }
+
 
     /**
      * original title
@@ -146,4 +186,35 @@ public class Movie implements Parcelable { // I generated it by www.parcelabler.
             return new Movie[size];
         }
     };
+
+    public List<Video> getVideos() {
+        if (videos == null){
+            videos = new ArrayList<>();
+        }
+
+        return videos;
+    }
+
+    public void setVideos(List<Video> videos) {
+        this.videos = videos;
+    }
+
+    public List<Review> getReviews() {
+        if (reviews == null){
+            reviews = new ArrayList<>();
+        }
+        return reviews;
+    }
+
+    public void setReviews(List<Review> reviews) {
+        this.reviews = reviews;
+    }
+
+    public boolean isFavourite() {
+        return favourite;
+    }
+
+    public void setFavourite(boolean favourite) {
+        this.favourite = favourite;
+    }
 }

@@ -78,7 +78,7 @@ public class MovieRecyclerViewAdapter extends RecyclerView.Adapter<MovieRecycler
             //notifyDataSetChanged();
         }
         else{
-            DiffUtil.DiffResult result = DiffUtil.calculateDiff(new MovieListDiffUtilCallback(movies));
+            DiffUtil.DiffResult result = DiffUtil.calculateDiff(new MovieListDiffUtilCallback(movies), true);
 
             this.mMovies = movies;
 

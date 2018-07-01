@@ -2,9 +2,12 @@ package com.andeudacity.popularmovie.repositories;
 
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MutableLiveData;
+import android.util.Log;
 
 import com.andeudacity.popularmovie.AppExecutors;
 import com.andeudacity.popularmovie.entities.Movie;
+import com.andeudacity.popularmovie.entities.Review;
+import com.andeudacity.popularmovie.entities.Video;
 import com.andeudacity.popularmovie.services.IMovieService;
 import com.andeudacity.popularmovie.services.ServiceResult;
 
@@ -16,6 +19,8 @@ import java.util.List;
  */
 
 public class MovieRepository implements IMovieRepository {
+
+    private String TAG = "MovieRepository";
 
     private final AppExecutors executors;
     private final IMovieService movieService;
@@ -86,5 +91,39 @@ public class MovieRepository implements IMovieRepository {
                 topRatedMoviesLIveData.postValue(result); //I guess if something failed it will remove all items..
             }
         });
+    }
+
+    private MutableLiveData<Movie> _movieLiveData = new MutableLiveData<>();
+
+    @Override
+    public LiveData<Movie> loadMovie(Movie movie) {
+        _movieLiveData  = new MutableLiveData<>();
+
+        if (!_loadedFromDatabase(movie.getId())){
+            _loadMovie(movie);
+        }
+
+        return _movieLiveData;
+    }
+
+    private void _loadMovie(Movie movie) {
+            executors.networkIO().execute(() -> {
+                ServiceResult<List<Review>> resultReview = movieService.loadReview(movie.getId());
+                if (resultReview.isSuccess()) {
+                    movie.setReviews(resultReview.data);
+                }
+
+                ServiceResult<List<Video>> resultVideo = movieService.loadVideo(movie.getId());
+                if (resultVideo.isSuccess()) {
+                    movie.setVideos(resultVideo.data);
+                }
+
+                Log.i(TAG, "_loadMovie80- : " + movie.getTitle() + " trailers-size=" + movie.getVideos().size() + " review-size=" + movie.getReviews().size());
+                _movieLiveData.postValue(movie);
+            });
+    }
+
+    private boolean _loadedFromDatabase(long id) {
+        return false;
     }
 }
