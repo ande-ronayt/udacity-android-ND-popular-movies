@@ -1,6 +1,7 @@
 package com.andeudacity.popularmovie.repositories;
 
 import com.andeudacity.popularmovie.AppExecutors;
+import com.andeudacity.popularmovie.database.MovieDatabase;
 import com.andeudacity.popularmovie.services.IMovieService;
 
 /**
@@ -17,17 +18,17 @@ public class RepositoryFactory {
 
     private static IMovieRepository mMovieRepository;
 
-    public synchronized IMovieRepository getMovieRepository(IMovieService movieService){
+    public synchronized IMovieRepository getMovieRepository(IMovieService movieService, MovieDatabase movieDatabase){
         if (mMovieRepository == null){
-            createMovieRepository(movieService);
+            createMovieRepository(movieService, movieDatabase);
         }
 
         return mMovieRepository;
     }
 
-    private synchronized void createMovieRepository(IMovieService movieService) {
+    private synchronized void createMovieRepository(IMovieService movieService, MovieDatabase movieDatabase) {
         if (mMovieRepository == null){
-            mMovieRepository = new MovieRepository(executors, movieService);
+            mMovieRepository = new MovieRepository(executors, movieService, movieDatabase);
         }
     }
 }

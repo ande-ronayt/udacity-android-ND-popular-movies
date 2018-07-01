@@ -5,6 +5,8 @@ import android.arch.lifecycle.MutableLiveData;
 import android.util.Log;
 
 import com.andeudacity.popularmovie.AppExecutors;
+import com.andeudacity.popularmovie.database.MovieDao;
+import com.andeudacity.popularmovie.database.MovieDatabase;
 import com.andeudacity.popularmovie.entities.Movie;
 import com.andeudacity.popularmovie.entities.Review;
 import com.andeudacity.popularmovie.entities.Video;
@@ -24,10 +26,12 @@ public class MovieRepository implements IMovieRepository {
 
     private final AppExecutors executors;
     private final IMovieService movieService;
+    private final MovieDatabase movieDatabase;
 
-    public MovieRepository(AppExecutors executors, IMovieService movieService){
+    public MovieRepository(AppExecutors executors, IMovieService movieService, MovieDatabase movieDatabase){
         this.executors = executors;
         this.movieService = movieService;
+        this.movieDatabase = movieDatabase;
     }
 
     private final MutableLiveData<ServiceResult<List<Movie>>> popularMoviesLiveData = new MutableLiveData<>();
@@ -99,9 +103,12 @@ public class MovieRepository implements IMovieRepository {
     public LiveData<Movie> loadMovie(Movie movie) {
         _movieLiveData  = new MutableLiveData<>();
 
-        if (!_loadedFromDatabase(movie.getId())){
-            _loadMovie(movie);
-        }
+        executors.diskIO().execute(() -> {
+            if (!_loadedFromDatabase(movie.getId())){
+                _loadMovie(movie);
+            }
+        });
+
 
         return _movieLiveData;
     }
@@ -124,6 +131,16 @@ public class MovieRepository implements IMovieRepository {
     }
 
     private boolean _loadedFromDatabase(long id) {
+        MovieDao movieDao = movieDatabase.movieDao();
+
+        Movie movie = movieDao.getMovie(id);
+        if (movie != null){
+            Log.i(TAG, "Data loaded from database: "+ movie.getTitle() + " trailers-size=" + movie.getVideos().size() + " review-size=" + movie.getReviews().size());
+            movie.setFavourite(true);
+            _movieLiveData.postValue(movie);
+            return true;
+        }
+
         return false;
     }
 }

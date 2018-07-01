@@ -11,8 +11,10 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 
+import com.andeudacity.popularmovie.database.MovieDatabase;
 import com.andeudacity.popularmovie.databinding.ActivityMainBinding;
 import com.andeudacity.popularmovie.databinding.ActivityMovieDetailBinding;
 import com.andeudacity.popularmovie.entities.Movie;
@@ -35,6 +37,7 @@ public class MovieDetailActivity extends AppCompatActivity {
 
     private DetailViewModel vm;
 
+    private Button addButton;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -47,7 +50,8 @@ public class MovieDetailActivity extends AppCompatActivity {
         AppExecutors executors = ((MovieApplication)getApplication()).getExecutors();
         RepositoryFactory repoFactory = new RepositoryFactory(executors);
         ServiceFactory serviceFacotry = new ServiceFactory(getString(R.string.apiKey));
-        IMovieRepository movieRepo = repoFactory.getMovieRepository(serviceFacotry.getMovieService());
+        MovieDatabase database = MovieDatabase.getInstance(this);
+        IMovieRepository movieRepo = repoFactory.getMovieRepository(serviceFacotry.getMovieService(), database);
 
         vm = obtainViewModel();
         vm.init(movieRepo, movie);
@@ -58,6 +62,34 @@ public class MovieDetailActivity extends AppCompatActivity {
         subscribe();
 
         getSupportActionBar().setTitle(movie.getTitle());
+
+        addButton = findViewById(R.id.btnAddToFavourite);
+
+        addButton.setOnClickListener((btn) -> {
+            if (!movie.isFavourite()){
+                addMovie(movie);
+            }
+            else{
+                removeMovie(movie);
+            }
+        });
+    }
+
+    private void removeMovie(Movie movie) {
+        AppExecutors executors = ((MovieApplication)getApplication()).getExecutors();
+        executors.diskIO().execute(() ->{
+//            MovieDatabase.getInstance(this).movieDao().deleteById(movie.getId());
+            movie.setFavourite(false);
+            MovieDatabase.getInstance(this).movieDao().deleteMovie(movie);
+        });
+    }
+
+    private void addMovie(Movie movie) {
+        AppExecutors executors = ((MovieApplication)getApplication()).getExecutors();
+        executors.diskIO().execute(() ->{
+            movie.setFavourite(true);
+            MovieDatabase.getInstance(this).movieDao().insertMovie(movie);
+        });
     }
 
     private void subscribe() {

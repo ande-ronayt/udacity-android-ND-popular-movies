@@ -1,6 +1,7 @@
 package com.andeudacity.popularmovie.entities;
 
 import android.arch.persistence.room.Entity;
+import android.arch.persistence.room.Ignore;
 import android.arch.persistence.room.PrimaryKey;
 import android.os.Parcel;
 import android.os.Parcelable;
@@ -30,7 +31,8 @@ public class Movie implements Parcelable { // I generated it by www.parcelabler.
      * movie poster image thumbnail
      * */
     private String poster_path;
-
+    // for some reason I need it for Room
+    public String getPoster_path() {return poster_path;}
 
     /**
      * A plot synopsis

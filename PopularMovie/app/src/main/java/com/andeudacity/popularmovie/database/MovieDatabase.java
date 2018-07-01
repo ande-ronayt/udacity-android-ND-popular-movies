@@ -10,8 +10,8 @@ import android.util.Log;
 
 import com.andeudacity.popularmovie.entities.Movie;
 
-//@Database( entities = {Movie.class}, version = 1, exportSchema = false)
-//@TypeConverters(MovieListsConverter.class)
+@Database( entities = {Movie.class}, version = 1, exportSchema = false)
+@TypeConverters(MovieListsConverter.class)
 public abstract class MovieDatabase extends RoomDatabase{
 
     private static final String TAG = "MovieDatabase";
@@ -19,7 +19,7 @@ public abstract class MovieDatabase extends RoomDatabase{
     private static final String DATABASE_NAME = "popular_movie";
     private static MovieDatabase sInstance;
 
-    public static MovieDatabase getsInstance(Context context){
+    public static MovieDatabase getInstance(Context context){
         if (sInstance == null){
             synchronized (LOCK){
                 Log.d(TAG, "Creating new database instance");
@@ -32,4 +32,6 @@ public abstract class MovieDatabase extends RoomDatabase{
         Log.d(TAG, "Getting databse instance");
         return sInstance;
     }
+
+    public abstract MovieDao movieDao();
 }

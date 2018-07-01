@@ -9,6 +9,7 @@ import android.support.v7.widget.GridLayoutManager;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.andeudacity.popularmovie.database.MovieDatabase;
 import com.andeudacity.popularmovie.databinding.ActivityMainBinding;
 import com.andeudacity.popularmovie.entities.Movie;
 import com.andeudacity.popularmovie.listadapters.MovieRecyclerViewAdapter;
@@ -35,7 +36,8 @@ public class MainActivity extends AppCompatActivity implements MovieRecyclerView
         AppExecutors executors = ((MovieApplication)getApplication()).getExecutors();
         RepositoryFactory repoFactory = new RepositoryFactory(executors);
         ServiceFactory serviceFacotry = new ServiceFactory(getString(R.string.apiKey));
-        IMovieRepository movieRepo = repoFactory.getMovieRepository(serviceFacotry.getMovieService());
+        MovieDatabase database = MovieDatabase.getInstance(this);
+        IMovieRepository movieRepo = repoFactory.getMovieRepository(serviceFacotry.getMovieService(), database);
 
         mBinding.getVm().init(movieRepo);
 
@@ -61,7 +63,7 @@ public class MainActivity extends AppCompatActivity implements MovieRecyclerView
         mBinding.list.setAdapter(new MovieRecyclerViewAdapter(this));
 
         mBinding.list.addOnScrollListener(mBinding.getVm().getScrollListener());
-        mBinding.list.scrollToPosition(mBinding.getVm().listPosition); //din't work.. items still null
+//        mBinding.list.scrollToPosition(mBinding.getVm().listPosition); //din't work.. items still null
     }
 
     private MovieListViewModel obtainViewModel() {

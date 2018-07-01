@@ -8,6 +8,10 @@
         <variable
             name="vm"
             type="com.andeudacity.popularmovie.entities.Movie"/>
+
+        <variable
+            name="viewModel"
+            type="com.andeudacity.popularmovie.viewModels.DetailViewModel"/>
     </data>
 
     <ScrollView
@@ -191,6 +195,18 @@
                 />
 
         </LinearLayout>
+
+        <Button
+            android:id="@+id/btnAddToFavourite"
+
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+
+            android:text='@{vm.favourite ? "Remove" : "Favoutite"}'
+
+            app:layout_constraintBottom_toTopOf="@+id/barrier"
+            app:layout_constraintStart_toStartOf="@+id/txtDate"
+            app:layout_constraintTop_toBottomOf="@+id/txtDate" />
 
     </android.support.constraint.ConstraintLayout>
 
