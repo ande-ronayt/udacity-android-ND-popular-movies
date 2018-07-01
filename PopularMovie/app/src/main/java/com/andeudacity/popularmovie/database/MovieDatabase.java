@@ -10,8 +10,8 @@ import android.util.Log;
 
 import com.andeudacity.popularmovie.entities.Movie;
 
-@Database( entities = {Movie.class}, version = 1, exportSchema = false)
-@TypeConverters(MovieListsConverter.class)
+//@Database( entities = {Movie.class}, version = 1, exportSchema = false)
+//@TypeConverters(MovieListsConverter.class)
 public abstract class MovieDatabase extends RoomDatabase{
 
     private static final String TAG = "MovieDatabase";
