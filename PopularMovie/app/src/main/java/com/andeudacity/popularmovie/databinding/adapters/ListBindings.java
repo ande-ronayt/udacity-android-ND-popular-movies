@@ -4,6 +4,7 @@ import android.databinding.BindingAdapter;
 import android.support.v7.widget.RecyclerView;
 import android.widget.ImageView;
 
+import com.andeudacity.popularmovie.R;
 import com.andeudacity.popularmovie.entities.Movie;
 import com.andeudacity.popularmovie.listadapters.MovieRecyclerViewAdapter;
 import com.squareup.picasso.Picasso;
@@ -25,10 +26,12 @@ public class ListBindings {
 
     @BindingAdapter("app:PicassoSrc")
     public static void setImage(ImageView image,String url){
+
         Picasso.with(image.getContext())
                 .load(url)
+                .placeholder(R.drawable.ic_local_movies)
+                .error(R.drawable.ic_error)
                 .into(image);
 
-        //TODO: show placeholder and error
     }
 }

@@ -5,14 +5,21 @@ import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
+import android.graphics.drawable.Drawable;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.Html;
 import android.util.Log;
+import android.util.TypedValue;
+import android.view.Gravity;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.andeudacity.popularmovie.database.MovieDatabase;
 import com.andeudacity.popularmovie.databinding.ActivityMainBinding;
@@ -21,6 +28,7 @@ import com.andeudacity.popularmovie.entities.Movie;
 import com.andeudacity.popularmovie.entities.Review;
 import com.andeudacity.popularmovie.entities.Video;
 import com.andeudacity.popularmovie.helpers.ImageHelper;
+import com.andeudacity.popularmovie.helpers.IntentHelper;
 import com.andeudacity.popularmovie.repositories.IMovieRepository;
 import com.andeudacity.popularmovie.repositories.RepositoryFactory;
 import com.andeudacity.popularmovie.services.ServiceFactory;
@@ -105,7 +113,6 @@ public class MovieDetailActivity extends AppCompatActivity {
                 setModel(movie);
 
                 addButton.setVisibility(View.VISIBLE);
-                //todo show button
             }
         });
     }
@@ -120,9 +127,11 @@ public class MovieDetailActivity extends AppCompatActivity {
 
     private void showReviews(Movie movie) {
         List<Review> reviews = movie.getReviews();
+        ViewGroup container = findViewById(R.id.llReviews);
 
         for(int i = 0; i < reviews.size(); i++){
-
+            Review review = reviews.get(i);
+            container.addView(createReviewLine(review.getAuthor(), review.getContent()));
         }
     }
 
@@ -164,10 +173,66 @@ public class MovieDetailActivity extends AppCompatActivity {
         TextView textView = new TextView(this);
         textView.setText(name);
 
+        textView.setPadding(0, 30,0, 30);
+        textView.setGravity(Gravity.CENTER_VERTICAL);
+        textView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 14);
+        textView.setCompoundDrawablesWithIntrinsicBounds( R.drawable.ic_play, 0, 0, 0);
+
+        textView.setOnClickListener((v) -> {
+            Log.d(TAG, "Open link in youtube app");
+            IntentHelper.watchYoutubeVideo(MovieDetailActivity.this, link);
+        });
+
         return textView;
     }
 
     private View createReviewLine(String author, String content){
-        return null;
+        TextView textView = new TextView(this);
+
+        String sourceString = "<b>" + author + ":</b> " + content;
+        textView.setText(Html.fromHtml(sourceString));
+
+        textView.setGravity(Gravity.CENTER_VERTICAL);
+        textView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 14);
+
+        return textView;
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu){
+
+        getMenuInflater().inflate(R.menu.detail_screen, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.menuShare:
+                shareFirstTrailer();
+                break;
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
+    private void shareFirstTrailer() {
+        if (movie.getVideos().size() > 0){
+
+            Video trailer = movie.getVideos().get(0);
+
+            String link = "http://www.youtube.com/watch?v=" + trailer.getKey();
+            String textToShare = "Check this out! " + trailer.getName() + "\n Click : " + link;
+
+            Intent sendIntent = new Intent();
+            sendIntent.setAction(Intent.ACTION_SEND);
+            sendIntent.putExtra(Intent.EXTRA_TEXT, textToShare);
+            sendIntent.setType("text/plain");
+
+            startActivity(sendIntent);
+            return;
+        }
+
+        Toast.makeText(this, getString(R.string.msg_no_trailers), Toast.LENGTH_SHORT).show();
     }
 }
