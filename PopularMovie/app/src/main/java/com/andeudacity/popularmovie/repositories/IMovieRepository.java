@@ -21,5 +21,7 @@ public interface IMovieRepository {
     LiveData<ServiceResult<List<Movie>>> loadTopRateMovie();
     void loadNextPageTopRate(int page);
 
+    LiveData<List<Movie>> loadFavouriteMovie();
+
     LiveData<Movie> loadMovie(Movie movie);
 }

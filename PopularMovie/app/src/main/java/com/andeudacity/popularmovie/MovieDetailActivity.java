@@ -78,9 +78,11 @@ public class MovieDetailActivity extends AppCompatActivity {
     private void removeMovie(Movie movie) {
         AppExecutors executors = ((MovieApplication)getApplication()).getExecutors();
         executors.diskIO().execute(() ->{
-//            MovieDatabase.getInstance(this).movieDao().deleteById(movie.getId());
+            MovieDatabase.getInstance(this).movieDao().deleteById(movie.getId());
             movie.setFavourite(false);
-            MovieDatabase.getInstance(this).movieDao().deleteMovie(movie);
+            //            MovieDatabase.getInstance(this).movieDao().deleteMovie(movie);
+
+            mBinding.setVm(movie);
         });
     }
 
@@ -89,6 +91,7 @@ public class MovieDetailActivity extends AppCompatActivity {
         executors.diskIO().execute(() ->{
             movie.setFavourite(true);
             MovieDatabase.getInstance(this).movieDao().insertMovie(movie);
+            mBinding.setVm(movie);
         });
     }
 
@@ -96,9 +99,13 @@ public class MovieDetailActivity extends AppCompatActivity {
         vm.getMovieLiveData().observe(this, new Observer<Movie>() {
             @Override
             public void onChanged(@Nullable Movie movie) {
+                MovieDetailActivity.this.movie = movie;
                 vm.getMovieLiveData().removeObserver(this);
 
                 setModel(movie);
+
+                addButton.setVisibility(View.VISIBLE);
+                //todo show button
             }
         });
     }

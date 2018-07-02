@@ -8,10 +8,6 @@
         <variable
             name="vm"
             type="com.andeudacity.popularmovie.entities.Movie"/>
-
-        <variable
-            name="viewModel"
-            type="com.andeudacity.popularmovie.viewModels.DetailViewModel"/>
     </data>
 
     <ScrollView
@@ -20,7 +16,7 @@
 
     <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="wrap_content">
 
         <ImageView
             android:id="@+id/imageView"
@@ -105,6 +101,33 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="@+id/barrier" />
+
+        <!--<Button-->
+            <!--android:id="@+id/btnAddToFavourite"-->
+
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+
+            <!--android:text='@{vm.favourite ? "Remove" : "Favoutite", default="Favourite}'-->
+
+            <!--app:layout_constraintBottom_toTopOf="@+id/barrier"-->
+            <!--app:layout_constraintStart_toStartOf="@+id/txtDate"-->
+            <!--app:layout_constraintTop_toBottomOf="@+id/txtDate"-->
+            <!--/>-->
+
+        <Button
+            android:id="@+id/btnAddToFavourite"
+
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+
+            android:text="@{vm.buttonName}"
+
+            app:layout_constraintBottom_toTopOf="@+id/barrier"
+            app:layout_constraintStart_toStartOf="@+id/txtDate"
+            app:layout_constraintTop_toBottomOf="@+id/txtDate"
+            />
+
 
         <View
 
@@ -196,21 +219,8 @@
 
         </LinearLayout>
 
-        <Button
-            android:id="@+id/btnAddToFavourite"
 
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-
-            android:text='@{vm.favourite ? "Remove" : "Favoutite"}'
-
-            app:layout_constraintBottom_toTopOf="@+id/barrier"
-            app:layout_constraintStart_toStartOf="@+id/txtDate"
-            app:layout_constraintTop_toBottomOf="@+id/txtDate" />
 
     </android.support.constraint.ConstraintLayout>
-
-
-
     </ScrollView>
 </layout>

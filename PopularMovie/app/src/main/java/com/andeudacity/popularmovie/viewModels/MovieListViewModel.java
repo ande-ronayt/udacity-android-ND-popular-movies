@@ -32,6 +32,7 @@ public class MovieListViewModel extends AndroidViewModel {
 
     public final static int TYPE_POPULAR = 1;
     public final static int TYPE_TOP_RATE = 2;
+    public final static int TYPE_FAVOURITE = 3;
 
     private Boolean firstInit = true;
 
@@ -74,6 +75,10 @@ public class MovieListViewModel extends AndroidViewModel {
     }
 
     private void addSourceToMediator() {
+        if (_favouriteLiveData != null){
+            moviesListMediator.removeSource(_favouriteLiveData);
+        }
+
         moviesListMediator.addSource(moviesLiveData, sr -> {
             if (sr != null) {
                 isLoadingNextPage = false;
@@ -84,6 +89,13 @@ public class MovieListViewModel extends AndroidViewModel {
                 }
             }
         });
+    }
+
+    private LiveData<List<Movie>> _favouriteLiveData;
+
+    private void addSourceToMediator(LiveData<List<Movie>> listLiveData) {
+        _favouriteLiveData = listLiveData;
+        moviesListMediator.addSource(listLiveData, mMovies::set);
     }
 
     public LiveData<Void> getMoviesListMediator(){
@@ -116,6 +128,17 @@ public class MovieListViewModel extends AndroidViewModel {
         addSourceToMediator();
     }
 
+    public void showFavourite(){
+
+        moviesListMediator.removeSource(moviesLiveData);
+
+        type = TYPE_FAVOURITE;
+        currentPage = 1;
+        moviesLiveData = null;
+
+        addSourceToMediator(movieRepository.loadFavouriteMovie());
+    }
+
     private void loadNewPage(){
         isLoadingNextPage = true;
         switch (type){
@@ -126,6 +149,9 @@ public class MovieListViewModel extends AndroidViewModel {
             case TYPE_TOP_RATE:
                 currentPage++;
                 this.movieRepository.loadNextPageTopRate(currentPage);
+                break;
+            case TYPE_FAVOURITE:
+                isLoadingNextPage = false;
                 break;
         }
     }

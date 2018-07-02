@@ -88,6 +88,10 @@ public class MainActivity extends AppCompatActivity implements MovieRecyclerView
                 mBinding.getVm().showTopRated();
                 mBinding.toolbar.setTitle(R.string.title_top_rated_movies);
                 break;
+            case R.id.menuFavourite:
+                mBinding.getVm().showFavourite();
+                mBinding.toolbar.setTitle(R.string.title_favourite_movies);
+                break;
         }
 
         return super.onOptionsItemSelected(item);

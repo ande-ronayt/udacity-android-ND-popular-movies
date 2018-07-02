@@ -8,7 +8,9 @@
     <string name="label_top_rated">Top Rated</string>
     <string name="title_popular_movies">Popular Movies</string>
     <string name="title_top_rated_movies">Top Rated Muvies</string>
+    <string name="title_favourite_movies">Favourite Muvies</string>
     <string name="description_movie_s_poster">Movie\'s poster</string>
     <string name="label_trailers">Trailers:</string>
     <string name="label_reviews">Reviews:</string>
+    <string name="label_favourite">Favourite</string>
 </resources>

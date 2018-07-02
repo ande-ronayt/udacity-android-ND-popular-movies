@@ -3,6 +3,7 @@ package com.andeudacity.popularmovie.entities;
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.Ignore;
 import android.arch.persistence.room.PrimaryKey;
+import android.databinding.ObservableField;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.support.annotation.NonNull;
@@ -161,6 +162,9 @@ public class Movie implements Parcelable { // I generated it by www.parcelabler.
         vote_average = in.readString();
     }
 
+    @Ignore
+    public ObservableField<String> buttonName = new ObservableField<>("Favourite");
+
     @Override
     public int describeContents() {
         return 0;
@@ -217,6 +221,13 @@ public class Movie implements Parcelable { // I generated it by www.parcelabler.
     }
 
     public void setFavourite(boolean favourite) {
+        if (favourite){
+            buttonName.set("Remove");
+        }
+        else{
+            buttonName.set("Favourite");
+        }
+
         this.favourite = favourite;
     }
 }

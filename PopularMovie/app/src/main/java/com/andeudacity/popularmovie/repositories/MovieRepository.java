@@ -38,6 +38,8 @@ public class MovieRepository implements IMovieRepository {
 
     private final MutableLiveData<ServiceResult<List<Movie>>> topRatedMoviesLIveData = new MutableLiveData<>();
 
+    private final MutableLiveData<ServiceResult<List<Movie>>> favouriteMoviesLiveData = new MutableLiveData<>();
+
     @Override
     public LiveData<ServiceResult<List<Movie>>> loadPopularMovie() {
         //load from server
@@ -95,6 +97,13 @@ public class MovieRepository implements IMovieRepository {
                 topRatedMoviesLIveData.postValue(result); //I guess if something failed it will remove all items..
             }
         });
+    }
+
+
+
+    @Override
+    public LiveData<List<Movie>> loadFavouriteMovie() {
+        return movieDatabase.movieDao().loadAllMovie();
     }
 
     private MutableLiveData<Movie> _movieLiveData = new MutableLiveData<>();
