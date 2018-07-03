@@ -4,6 +4,7 @@ import android.arch.lifecycle.ViewModelProviders;
 import android.content.res.Configuration;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.view.Menu;
@@ -20,18 +21,22 @@ import com.andeudacity.popularmovie.viewModels.MovieListViewModel;
 
 public class MainActivity extends AppCompatActivity implements MovieRecyclerViewAdapter.IOnCellClickListener {
 
-    //QUESTIONS:
-
-    //1. How to keep list position after rotating ?
-
+    Parcelable mListState = null;
 
     private ActivityMainBinding mBinding;
+    private static String LIST_STATE_KEY = "LIST_STATE";
+    private MovieRecyclerViewAdapter mAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mBinding = DataBindingUtil.setContentView(this, R.layout.activity_main);
+
+        initList();
+
         mBinding.setVm(obtainViewModel());
+
+        mBinding.list.addOnScrollListener(mBinding.getVm().getScrollListener());
 
         AppExecutors executors = ((MovieApplication)getApplication()).getExecutors();
         RepositoryFactory repoFactory = new RepositoryFactory(executors);
@@ -47,7 +52,7 @@ public class MainActivity extends AppCompatActivity implements MovieRecyclerView
 
         setSupportActionBar(mBinding.toolbar);
 
-        initList();
+
     }
 
     private void initList() {
@@ -60,10 +65,10 @@ public class MainActivity extends AppCompatActivity implements MovieRecyclerView
 
         final GridLayoutManager layoutManager = new GridLayoutManager(this, columnCount);
         mBinding.list.setLayoutManager(layoutManager);
-        mBinding.list.setAdapter(new MovieRecyclerViewAdapter(this));
+        mAdapter = new MovieRecyclerViewAdapter(this);
+        mBinding.list.setAdapter(mAdapter);
 
-        mBinding.list.addOnScrollListener(mBinding.getVm().getScrollListener());
-//        mBinding.list.scrollToPosition(mBinding.getVm().listPosition); //din't work.. items still null
+
     }
 
     private MovieListViewModel obtainViewModel() {
@@ -100,5 +105,35 @@ public class MainActivity extends AppCompatActivity implements MovieRecyclerView
     @Override
     public void OnClick(Movie movie) {
         startActivity(MovieDetailActivity.getIntent(this, movie));
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+
+        // Save list state
+        mListState =  mBinding.list.getLayoutManager().onSaveInstanceState();
+        outState.putParcelable(LIST_STATE_KEY, mListState);
+    }
+
+    //Restore state in the onRestoreInstanceState():
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+
+        // Retrieve list state and list/item positions
+        if(savedInstanceState != null){
+            mListState = savedInstanceState.getParcelable(LIST_STATE_KEY);
+        }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        if (mListState != null) {
+            mBinding.list.getLayoutManager().onRestoreInstanceState(mListState);
+        }
     }
 }

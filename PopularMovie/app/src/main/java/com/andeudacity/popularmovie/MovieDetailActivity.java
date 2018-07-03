@@ -45,6 +45,8 @@ public class MovieDetailActivity extends AppCompatActivity {
 
     private Button addButton;
 
+    private AppExecutors mExecutors = ((MovieApplication)getApplication()).getExecutors();
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -54,8 +56,7 @@ public class MovieDetailActivity extends AppCompatActivity {
             this.finish();  //nothing to show
         }
 
-        AppExecutors executors = ((MovieApplication)getApplication()).getExecutors();
-        RepositoryFactory repoFactory = new RepositoryFactory(executors);
+        RepositoryFactory repoFactory = new RepositoryFactory(mExecutors);
         ServiceFactory serviceFacotry = new ServiceFactory(getString(R.string.apiKey));
         MovieDatabase database = MovieDatabase.getInstance(this);
         IMovieRepository movieRepo = repoFactory.getMovieRepository(serviceFacotry.getMovieService(), database);
@@ -83,8 +84,7 @@ public class MovieDetailActivity extends AppCompatActivity {
     }
 
     private void removeMovie(Movie movie) {
-        AppExecutors executors = ((MovieApplication)getApplication()).getExecutors();
-        executors.diskIO().execute(() ->{
+        mExecutors.diskIO().execute(() ->{
             MovieDatabase.getInstance(this).movieDao().deleteById(movie.getId());
             movie.setFavourite(false);
             //            MovieDatabase.getInstance(this).movieDao().deleteMovie(movie);
@@ -94,8 +94,7 @@ public class MovieDetailActivity extends AppCompatActivity {
     }
 
     private void addMovie(Movie movie) {
-        AppExecutors executors = ((MovieApplication)getApplication()).getExecutors();
-        executors.diskIO().execute(() ->{
+        mExecutors.diskIO().execute(() ->{
             movie.setFavourite(true);
             MovieDatabase.getInstance(this).movieDao().insertMovie(movie);
             mBinding.setVm(movie);

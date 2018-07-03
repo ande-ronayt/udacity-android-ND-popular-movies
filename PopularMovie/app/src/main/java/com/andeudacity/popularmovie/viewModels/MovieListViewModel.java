@@ -4,11 +4,13 @@ import android.app.Application;
 import android.arch.lifecycle.AndroidViewModel;
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MediatorLiveData;
+import android.arch.lifecycle.MutableLiveData;
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModel;
 import android.content.Context;
 import android.databinding.ObservableArrayList;
 import android.databinding.ObservableField;
+import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.GridLayoutManager;
@@ -182,31 +184,6 @@ public class MovieListViewModel extends AndroidViewModel {
                 }
             }
         }
-
-
-        // below approach had some problems:
-        //so, it's loading in the beginning two times, also when rotation happens
-
-//
-//        @Override
-//        public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
-//            if (isLoadingNextPage)
-//                return;
-//
-//            RecyclerView.LayoutManager layoutManager = recyclerView.getLayoutManager();
-//
-//            int visibleItemCount = layoutManager.getChildCount();
-//            int totalItemCount = layoutManager.getItemCount();
-//            int pastVisibleItems = ((GridLayoutManager)layoutManager).findFirstVisibleItemPosition();
-//
-//
-//            if (pastVisibleItems + visibleItemCount >= totalItemCount - 6) { // start loading before last 6 items loaded
-//                if (!isLoadingNextPage){
-//                    loadNewPage();
-//                }
-//            }
-//
-//        }
 
         //this one will try for saving list position:
 
