@@ -4,11 +4,14 @@ import android.arch.lifecycle.ViewModelProviders;
 import android.content.res.Configuration;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.Parcelable;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 
 import com.andeudacity.popularmovie.database.MovieDatabase;
 import com.andeudacity.popularmovie.databinding.ActivityMainBinding;
@@ -26,6 +29,7 @@ public class MainActivity extends AppCompatActivity implements MovieRecyclerView
     private ActivityMainBinding mBinding;
     private static String LIST_STATE_KEY = "LIST_STATE";
     private MovieRecyclerViewAdapter mAdapter;
+    private MovieListViewModel vm;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,7 +38,9 @@ public class MainActivity extends AppCompatActivity implements MovieRecyclerView
 
         initList();
 
-        mBinding.setVm(obtainViewModel());
+        vm = obtainViewModel();
+
+        mBinding.setVm(vm);
 
         mBinding.list.addOnScrollListener(mBinding.getVm().getScrollListener());
 
@@ -44,9 +50,9 @@ public class MainActivity extends AppCompatActivity implements MovieRecyclerView
         MovieDatabase database = MovieDatabase.getInstance(this);
         IMovieRepository movieRepo = repoFactory.getMovieRepository(serviceFacotry.getMovieService(), database);
 
-        mBinding.getVm().init(movieRepo);
+        vm.init(movieRepo);
 
-        mBinding.getVm().getMoviesListMediator().observe(this, aVoid -> {
+        vm.getMoviesListMediator().observe(this, aVoid -> {
             //do nothing
         });
 
@@ -86,15 +92,15 @@ public class MainActivity extends AppCompatActivity implements MovieRecyclerView
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()){
             case R.id.menuPopular:
-                mBinding.getVm().showPopular();
+                vm.showPopular();
                 mBinding.toolbar.setTitle(R.string.title_popular_movies);
                 break;
             case R.id.menuTopRated:
-                mBinding.getVm().showTopRated();
+                vm.showTopRated();
                 mBinding.toolbar.setTitle(R.string.title_top_rated_movies);
                 break;
             case R.id.menuFavourite:
-                mBinding.getVm().showFavourite();
+                vm.showFavourite();
                 mBinding.toolbar.setTitle(R.string.title_favourite_movies);
                 break;
         }
@@ -133,7 +139,14 @@ public class MainActivity extends AppCompatActivity implements MovieRecyclerView
         super.onResume();
 
         if (mListState != null) {
-            mBinding.list.getLayoutManager().onRestoreInstanceState(mListState);
+            mAdapter.setItems(vm.getMovies().get());
+//            mBinding.list.getLayoutManager().onRestoreInstanceState(mListState);
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    mBinding.list.getLayoutManager().onRestoreInstanceState(mListState);
+                }
+            }, 200);
         }
     }
 }
