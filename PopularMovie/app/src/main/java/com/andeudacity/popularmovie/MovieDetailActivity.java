@@ -46,7 +46,7 @@ public class MovieDetailActivity extends AppCompatActivity {
     private Button addButton;
 
     @Override
-    public void onCreate(@Nullable Bundle savedInstanceState, @Nullable PersistableBundle persistentState) {
+    public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         movie = getMovie();
