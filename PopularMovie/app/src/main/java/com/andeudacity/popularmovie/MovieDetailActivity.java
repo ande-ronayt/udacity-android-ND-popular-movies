@@ -5,7 +5,7 @@ import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
-import android.graphics.drawable.Drawable;
+import android.os.PersistableBundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -22,12 +22,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.andeudacity.popularmovie.database.MovieDatabase;
-import com.andeudacity.popularmovie.databinding.ActivityMainBinding;
 import com.andeudacity.popularmovie.databinding.ActivityMovieDetailBinding;
 import com.andeudacity.popularmovie.entities.Movie;
 import com.andeudacity.popularmovie.entities.Review;
 import com.andeudacity.popularmovie.entities.Video;
-import com.andeudacity.popularmovie.helpers.ImageHelper;
 import com.andeudacity.popularmovie.helpers.IntentHelper;
 import com.andeudacity.popularmovie.repositories.IMovieRepository;
 import com.andeudacity.popularmovie.repositories.RepositoryFactory;
@@ -46,8 +44,9 @@ public class MovieDetailActivity extends AppCompatActivity {
     private DetailViewModel vm;
 
     private Button addButton;
+
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onCreate(@Nullable Bundle savedInstanceState, @Nullable PersistableBundle persistentState) {
         super.onCreate(savedInstanceState);
 
         movie = getMovie();

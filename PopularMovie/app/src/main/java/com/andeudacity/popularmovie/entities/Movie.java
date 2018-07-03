@@ -3,6 +3,7 @@ package com.andeudacity.popularmovie.entities;
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.Ignore;
 import android.arch.persistence.room.PrimaryKey;
+import android.arch.persistence.room.Relation;
 import android.databinding.ObservableField;
 import android.os.Parcel;
 import android.os.Parcelable;
